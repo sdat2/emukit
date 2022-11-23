@@ -26,15 +26,18 @@ class LatinDesign(InitialDesignBase):
         """
         super(LatinDesign, self).__init__(parameter_space)
 
-    def get_samples(self, point_count: int) -> np.ndarray:
+    def get_samples(self, point_count: int, criterion: str ="centermaximin") -> np.ndarray:
         """
         Generates requested amount of points.
+        
+        https://pythonhosted.org/pyDOE/randomized.html#latin-hypercube
 
         :param point_count: Number of points required.
+        :param criterion: Criterion for Latin Hypercube design samples. Defaults to "centermaxmin".
         :return: A numpy array of generated samples, shape (point_count x space_dim)
         """
         bounds = self.parameter_space.get_bounds()
-        X_design_aux = pyDOE.lhs(len(bounds), point_count, criterion="center")
+        X_design_aux = pyDOE.lhs(len(bounds), point_count, criterion=criterion)
         ones = np.ones((X_design_aux.shape[0], 1))
 
         lower_bound = np.asarray(bounds)[:, 0].reshape(1, len(bounds))
